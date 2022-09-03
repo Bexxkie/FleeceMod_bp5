@@ -17,6 +17,7 @@ namespace FleeceMod
         public static ManualLogSource _log;
 
         public static ConfigEntry<float> IncrementValue;
+        public static ConfigEntry<int> TarotCount;
         // INIT...
         private void Awake()
         {
@@ -24,16 +25,18 @@ namespace FleeceMod
             BepInEx.Logging.Logger.Sources.Add(_log);
 
             IncrementValue = Config.Bind("General", "IncDamage", 0.1f, "Set damage increase per kill");
+            TarotCount = Config.Bind("General", "TarotCount", 4, "Set amount of tarot's recieved");
             // Apply all the patches
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
             _log.LogInfo($"Fleecemod loaded");
         }
     }
     // --Patches--
-    //  Golden fleece patch
-    [HarmonyPatch(typeof(PlayerFleeceManager), nameof(PlayerFleeceManager.IncrementDamageModifier))]
+    [HarmonyPatch(typeof(PlayerFleeceManager))]
     public class PlayerFleeceManagerPatch
     {
+        //  Golden fleece patch
+        [HarmonyPatch(nameof(PlayerFleeceManager.IncrementDamageModifier))]
         [HarmonyPrefix]
         public static bool goldenFleecePatch(ref float ___damageMultiplier)
         {
@@ -43,9 +46,18 @@ namespace FleeceMod
                 PlayerFleeceManager.OnDamageMultiplierModified?.Invoke(___damageMultiplier);
                 return false;
             }
-            Plugin._log.LogInfo($"GoldenFleece patched");
             return false;
         }
-
+        // Tarot fleece patch --untested, but should work i assume
+        [HarmonyPatch(nameof(PlayerFleeceManager.GetFreeTarotCards))]
+        [HarmonyPrefix]
+        public static int tarotFleecePatch()
+        {
+            if (DataManager.Instance.PlayerFleece == 4)
+            {
+                return Plugin.TarotCount.Value;
+            }
+            return 0;
+        }
     }
 }
