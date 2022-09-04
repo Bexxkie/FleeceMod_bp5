@@ -1,8 +1,12 @@
-﻿using BepInEx;
+﻿using System;
+using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
 using System.Reflection;
 using BepInEx.Configuration;
+using MMBiomeGeneration;
+using Map;
+using static UnityEngine.ParticleSystem.PlaybackState;
 
 namespace FleeceMod
 {
@@ -21,7 +25,7 @@ namespace FleeceMod
         // INIT...
         private void Awake()
         {
-            _log = new ManualLogSource("fleeceMod-Log");
+            _log = new ManualLogSource(" fleeceMod-Log");
             BepInEx.Logging.Logger.Sources.Add(_log);
 
             IncrementValue = Config.Bind("General", "IncDamage", 0.1f, "Set damage increase per kill");
@@ -48,16 +52,32 @@ namespace FleeceMod
             }
             return false;
         }
-        // Tarot fleece patch --untested, but should work i assume
+        // Tarot fleece patch
         [HarmonyPatch(nameof(PlayerFleeceManager.GetFreeTarotCards))]
         [HarmonyPrefix]
-        public static int tarotFleecePatch()
+        public static bool tarotFleecePatch()
         {
             if (DataManager.Instance.PlayerFleece == 4)
             {
-                return Plugin.TarotCount.Value;
+                PlayerFleeceManagerPatch.drawCards(Plugin.TarotCount.Value);
+                return false;
             }
-            return 0;
+            return false;
+        }
+        public static void drawCards(int cardCount)
+        {
+            if (cardCount > TarotCards.TarotCardsUnlockedCount())
+            { 
+                cardCount = TarotCards.TarotCardsUnlockedCount(); 
+            }
+            for(int i = 0; i<cardCount; i++)
+            {
+                TarotCards.TarotCard card = TarotCards.DrawRandomCard();
+                DataManager.Instance.PlayerRunTrinkets.Add(card);
+                TrinketManager.AddTrinket(card);
+            }
         }
     }
+
+
 }
