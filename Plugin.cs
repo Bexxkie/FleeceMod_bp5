@@ -16,7 +16,7 @@ namespace FleeceMod
         public const string LEGACY_GUID = "com.lily.goldenFleeceFix";
         public const string GUID = "goldenFleeceFix";
         public const string NAME = "Golden Fleece Fix";
-        public const string VERSION = "1.2";
+        public const string VERSION = "1.3";
 
         public static ManualLogSource _log;
 
@@ -64,6 +64,7 @@ namespace FleeceMod
             }
             return false;
         }
+
         public static void drawCards(int cardCount)
         {
             if (cardCount > TarotCards.TarotCardsUnlockedCount())
