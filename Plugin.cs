@@ -129,7 +129,7 @@ namespace FleeceMod
         [HarmonyPostfix]
         public static void OpenChestPatch()
         {
-
+            Plugin.opened++;
             if (Plugin.opened % 2 != 0)
             {
                 PlayerFleeceManagerPatch.DrawCards(1);
