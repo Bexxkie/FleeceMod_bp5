@@ -157,6 +157,7 @@ namespace FleeceMod
             }
             return true;
         }
+
         [HarmonyPatch(nameof(PlayerFleeceManager.GetLootMultiplier))]
         [HarmonyPrefix]
         public static bool LootMultPatch(ref float __result)
@@ -168,12 +169,12 @@ namespace FleeceMod
             }
             return true;
         }
-        [HarmonyPatch(nameof(PlayerFleeceManager.ResetDamageModifier))]
+        /*[HarmonyPatch(nameof(PlayerFleeceManager.ResetDamageModifier))]
         [HarmonyPrefix]
         public static void ResetDamModPatch()
         {
-            Plugin._log.LogError(DataManager.Instance.PlayerFleece.ToString());
-        }
+            //Plugin._log.LogError(DataManager.Instance.PlayerFleece.ToString());
+        }*/
 
 
         public static void DrawCards(int cardCount)
