@@ -15,19 +15,6 @@ namespace FleeceMod
 {
     internal class Helpers
     {
-        internal static InventoryItem.ITEM_TYPE GetCardCategory(TarotCards.Card Type)
-        {
-            if (Type - TarotCards.Card.Sword <= 3)
-            {
-                return InventoryItem.ITEM_TYPE.WEAPON_CARD;
-            }
-            if (Type - TarotCards.Card.Fireball > 1)
-            {
-                return InventoryItem.ITEM_TYPE.TRINKET_CARD;
-            }
-            return InventoryItem.ITEM_TYPE.CURSE_CARD;
-        }
-
         public static List<TarotCards.TarotCard> DrawCards(int cardCount)
         {
             List<TarotCards.TarotCard> cards = new List<TarotCards.TarotCard>();
